@@ -2,7 +2,7 @@ package ru.dingo.apiKeyRotator;
 
 public class Key {
     String value;
-    String usedCount;
+    Integer usedCount;
     boolean enabled;
     String friendlyName;
 }
