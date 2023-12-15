@@ -1,0 +1,46 @@
+plugins {
+    id 'java'
+    id 'war'
+}
+
+apply from: 'https://raw.github.com/gretty-gradle-plugin/gretty/master/pluginScripts/gretty.plugin'
+
+group 'ru.dingo3'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+gretty {
+    httpPort = project.hasProperty("httpPort") ? project.httpPort as int : 8180
+    contextPath = '/'
+}
+
+dependencies {
+//    compileOnly "org.eclipse.jetty.aggregate:jetty-servlet:8.1.17.v20150415"
+//    compileOnly "org.eclipse.jetty.aggregate:jetty-plus:8.1.17.v20150415"
+//    compileOnly "org.eclipse.jetty.aggregate:jetty-all-server:8.1.17.v20150415"
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.0'
+
+    compileOnly('jakarta.servlet:jakarta.servlet-api:6.0.0')
+    implementation("org.glassfish.web:jakarta.servlet.jsp.jstl:3.0.1")
+    implementation("jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api:3.0.0")
+
+    //    Lombok
+    compileOnly 'org.projectlombok:lombok:1.18.30'
+    annotationProcessor 'org.projectlombok:lombok:1.18.30'
+
+    testCompileOnly 'org.projectlombok:lombok:1.18.30'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.30'
+
+    implementation 'io.undertow:undertow-core:2.3.10.Final'
+    implementation 'io.undertow:undertow-servlet:2.3.10.Final'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+}
+
+test {
+    useJUnitPlatform()
+}
+
