@@ -27,6 +27,7 @@ class ProxyStorageTest {
         proxyEndpoint.setUrlTo("https://api.spotify.com/v1");
         proxyEndpoint.setWhereKey(WhereKeys.HEADER);
         proxyEndpoint.setKeyName("Authorization");
+        proxyEndpoint.setKeyPackToUse("SpotifyKeys");
         proxyStorage.addProxyEndpoint(proxyEndpoint);
         proxyStorage.saveToFile();
         assertEquals(1, proxyStorage.proxyEndpoints.size());

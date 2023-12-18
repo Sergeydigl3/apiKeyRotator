@@ -15,12 +15,10 @@ repositories {
 gretty {
     httpPort = project.hasProperty("httpPort") ? project.httpPort as int : 8180
     contextPath = '/'
+    fastReload = true
 }
 
 dependencies {
-//    compileOnly "org.eclipse.jetty.aggregate:jetty-servlet:8.1.17.v20150415"
-//    compileOnly "org.eclipse.jetty.aggregate:jetty-plus:8.1.17.v20150415"
-//    compileOnly "org.eclipse.jetty.aggregate:jetty-all-server:8.1.17.v20150415"
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.0'
 
     compileOnly('jakarta.servlet:jakarta.servlet-api:6.0.0')

@@ -2,6 +2,8 @@ package ru.dingo.apiKeyRotator;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import lombok.Getter;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,6 +11,7 @@ import java.util.ArrayList;
 
 public class ProxyStorage {
     String filename = "proxies.json";
+    @Getter
     ArrayList<ProxyEndpoint> proxyEndpoints = new ArrayList<>();
 
     private static ProxyStorage instance = null;
@@ -40,6 +43,7 @@ public class ProxyStorage {
 
     public void saveToFile() {
         ObjectMapper mapper = new ObjectMapper();
+        mapper.enable(SerializationFeature.INDENT_OUTPUT);
         try {
             mapper.writeValue(new File(filename), proxyEndpoints);
         } catch (IOException e) {
@@ -49,5 +53,31 @@ public class ProxyStorage {
 
     public void clear() {
         proxyEndpoints.clear();
+    }
+
+    public void runBackgroundSaver() {
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (true) {
+                    saveToFile();
+                    try {
+                        Thread.sleep(1000 * 3);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+        thread.start();
+    }
+
+    public ProxyEndpoint getProxyEndpoint(String endpointName) {
+        for (ProxyEndpoint proxyEndpoint : proxyEndpoints) {
+            if (proxyEndpoint.getFriendlyName().equals(endpointName)) {
+                return proxyEndpoint;
+            }
+        }
+        return null;
     }
 }

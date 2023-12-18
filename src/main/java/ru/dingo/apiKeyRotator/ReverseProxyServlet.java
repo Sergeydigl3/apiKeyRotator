@@ -16,9 +16,12 @@ import java.net.URL;
 public class ReverseProxyServlet extends HttpServlet {
     String remoteHost;
     ProxyStorage proxyStorage;
+    KeysStorage keysStorage;
 
     public void init() {
         proxyStorage = ProxyStorage.getInstance();
+        keysStorage = KeysStorage.getInstance();
+        keysStorage.runBackgroundSaver();
     }
 
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -33,6 +36,7 @@ public class ReverseProxyServlet extends HttpServlet {
 
         ProxyEndpoint proxyEndpoint = null;
         for (ProxyEndpoint tempProxyEndpoint : proxyStorage.proxyEndpoints) {
+            if (!tempProxyEndpoint.isEnabled()) continue;
             if (request.getRequestURI().startsWith(tempProxyEndpoint.getUrlFrom())) {
                 proxyEndpoint = tempProxyEndpoint;
                 break;
@@ -43,6 +47,7 @@ public class ReverseProxyServlet extends HttpServlet {
             String referer = request.getHeader("Referer");
             URL refererUrl = new URL(referer);
             for (ProxyEndpoint tempProxyEndpoint : proxyStorage.proxyEndpoints) {
+                if (!tempProxyEndpoint.isEnabled()) continue;
                 if (refererUrl.getFile().startsWith(tempProxyEndpoint.getUrlFrom())) {
                     proxyEndpoint = tempProxyEndpoint;
                     isReferer = true;
@@ -59,10 +64,26 @@ public class ReverseProxyServlet extends HttpServlet {
 
         String finalUrl;
         String queryString = request.getQueryString();
+        KeyPack keyPack = keysStorage.getKeyPack(proxyEndpoint.getKeyPackToUse());
+        String token = "errorToken";
+        if (keyPack == null) {
+            if (proxyEndpoint.getWhereKey() == WhereKeys.HEADER || proxyEndpoint.getWhereKey() == WhereKeys.HEADER_BEARER) {
+                response.sendError(HttpServletResponse.SC_NOT_FOUND);
+                return;
+            }
+        } else {
+            Key key = keyPack.getKey(proxyEndpoint.urlTo, proxyEndpoint.getTimeConditions());
+            if (key == null) {
+                response.sendError(HttpServletResponse.SC_NOT_FOUND);
+                return;
+            }
+            token = key.getValue();
+        }
+
+
         if (queryString == null) queryString = "";
         if (proxyEndpoint.getWhereKey() == WhereKeys.PARAM) {
-            String key = "testKey";
-            queryString = replaceParamOrAdd(queryString, proxyEndpoint.getKeyName(), key);
+            queryString = replaceParamOrAdd(queryString, proxyEndpoint.getKeyName(), token);
         }
         String urlPath = request.getRequestURI() + (queryString.isEmpty() ? "" : "?" + queryString);
 
@@ -77,6 +98,7 @@ public class ReverseProxyServlet extends HttpServlet {
         URL url = new URL(finalUrl);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
+
         // Preserve the original request method
         connection.setRequestMethod(request.getMethod());
 
@@ -87,9 +109,9 @@ public class ReverseProxyServlet extends HttpServlet {
                 });
 
         if (proxyEndpoint.getWhereKey() == WhereKeys.HEADER) {
-            connection.setRequestProperty(proxyEndpoint.getKeyName(), proxyEndpoint.getKeyName());
+            connection.setRequestProperty(proxyEndpoint.getKeyName(), token);
         } else if (proxyEndpoint.getWhereKey() == WhereKeys.HEADER_BEARER) {
-            connection.setRequestProperty("Authorization", "Bearer " + proxyEndpoint.getKeyName());
+            connection.setRequestProperty("Authorization", "Bearer " + token);
         }
 
         // Copy request content for POST, PUT, etc.

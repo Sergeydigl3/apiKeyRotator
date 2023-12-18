@@ -1,28 +1,34 @@
 package ru.dingo.apiKeyRotator;
 
-import java.util.ArrayList;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+
+
+@Data
 public class KeyPack {
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    transient Object locker = new Object();
     ArrayList<Key> keys = new ArrayList<>();
 
-    public KeyPack() {
+    public Key getKey(String endpointUrl, ArrayList<TimeCondition> timeConditions) {
+        for (Key key : keys) {
+            synchronized (locker) {
+                Key avalibleKey = key.useKey(endpointUrl, timeConditions);
+                if (avalibleKey != null) {
+                    return avalibleKey;
+                }
+            }
+        }
+        return null;
     }
 
-//    public isAvailable() {
-//        for (Key key : keys) {
-//            if (key.enabled) {
-//                return true;
-//            }
-//        }
-//        return false;
-//    }
-
-//    public getAvailableKey() {
-//        for (Key key : keys) {
-//            if (key.enabled) {
-//                return key;
-//            }
-//        }
-//        return null;
-//    }
+    public void addKey(Key key) {
+        keys.add(key);
+    }
 }
