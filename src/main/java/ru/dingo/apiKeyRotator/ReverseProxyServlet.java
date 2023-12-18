@@ -158,7 +158,7 @@ public class ReverseProxyServlet extends HttpServlet {
         if (url.contains(param)) {
             return url.replaceAll(param + "=[^&]*", param + "=" + value);
         } else {
-            return url + (url.contains("?") ? "&" : "?") + param + "=" + value;
+            return url + (url.contains("?") ? "?" : "&") + param + "=" + value;
         }
     }
 }
