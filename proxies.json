@@ -1,0 +1,13 @@
+[ {
+  "enabled" : true,
+  "friendlyName" : "Httpbin",
+  "urlFrom" : "/bin",
+  "urlTo" : "https://httpbin.org",
+  "whereKey" : "PARAM",
+  "keyName" : "token",
+  "timeConditions" : [ {
+    "count" : 15,
+    "seconds" : 1
+  } ],
+  "keyPackToUse" : "SpotifyKeys"
+} ]

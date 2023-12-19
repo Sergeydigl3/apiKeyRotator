@@ -1,0 +1,27 @@
+{
+  "test" : {
+    "keys" : [ ]
+  },
+  "vkKeys" : {
+    "keys" : [ {
+      "value" : "key1",
+      "usedCount" : 5,
+      "enabled" : true,
+      "friendlyName" : "Key",
+      "maxTimeDelta" : 0,
+      "usageHistory" : {
+        "https://vk.com" : [ 1702948923131 ]
+      }
+    }, {
+      "value" : "key2",
+      "usedCount" : 0,
+      "enabled" : true,
+      "friendlyName" : "Key",
+      "maxTimeDelta" : 0,
+      "usageHistory" : { }
+    } ]
+  },
+  "httpBinKeys" : {
+    "keys" : [ ]
+  }
+}
