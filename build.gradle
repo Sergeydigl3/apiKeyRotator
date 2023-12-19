@@ -36,6 +36,8 @@ dependencies {
     implementation 'io.undertow:undertow-servlet:2.3.10.Final'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+    testImplementation 'io.rest-assured:rest-assured:5.3.0'
+
 }
 
 test {

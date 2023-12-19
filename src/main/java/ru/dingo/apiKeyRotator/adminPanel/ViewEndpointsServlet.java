@@ -27,6 +27,7 @@ public class ViewEndpointsServlet extends HttpServlet {
 
     // Create new endpoint
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        System.out.printf("POST request to %s%n", request.getRequestURI());
         // get param from post request
         String endpointName = request.getParameter("endpoint-name");
 

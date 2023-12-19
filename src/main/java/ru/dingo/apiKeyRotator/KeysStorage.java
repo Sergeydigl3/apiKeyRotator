@@ -3,6 +3,7 @@ package ru.dingo.apiKeyRotator;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import lombok.Getter;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,6 +12,7 @@ import java.util.HashMap;
 
 public class KeysStorage {
     String filename = "keys.json";
+    @Getter
     HashMap<String, KeyPack> keyPacks = new HashMap<>();
 
     private static KeysStorage instance = null;

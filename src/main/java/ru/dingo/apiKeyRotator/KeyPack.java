@@ -13,7 +13,7 @@ import java.util.LinkedList;
 @Data
 public class KeyPack {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    transient Object locker = new Object();
+    final transient Object locker = new Object();
     ArrayList<Key> keys = new ArrayList<>();
 
     public Key getKey(String endpointUrl, ArrayList<TimeCondition> timeConditions) {

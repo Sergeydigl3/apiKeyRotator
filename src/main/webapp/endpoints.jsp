@@ -17,7 +17,7 @@
       </div>
       <ul class="sections">
         <a style="text-decoration: none; color: inherit;" href="/admin/endpoints"><li>ENDPOINTS</li></a>
-        <a style="text-decoration: none; color: inherit;" href="/admin/endpoints"><li>KEYS PACKS</a></li></a>
+        <a style="text-decoration: none; color: inherit;" href="/admin/keypacks"><li>KEYS PACKS</a></li></a>
       </ul>
       <button class="logout-btn">Logout</button>
     </nav>

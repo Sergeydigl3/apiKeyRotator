@@ -38,6 +38,8 @@ public class EditEndpointServlet extends HttpServlet {
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        System.out.printf("\n\n\nPOST request to %s%n", request.getRequestURI());
+        // Check if DELETE request
         if (request.getParameter("_method") != null && request.getParameter("_method").equals("DELETE")) {
             doDelete(request, response);
             return;
@@ -91,15 +93,6 @@ public class EditEndpointServlet extends HttpServlet {
             System.out.println("ProxyEndpoint not found");
             return;
         }
-//        ProxyEndpoint proxyEndpoint = new ProxyEndpoint(
-//                endpointName,
-//                from,
-//                to,
-//                whereInsert,
-//                keyName,
-//                timeConditions,
-//                keypack
-//        );
         proxyEndpoint.setUrlFrom(from);
         proxyEndpoint.setUrlTo(to);
         proxyEndpoint.setWhereKey(whereInsert);
